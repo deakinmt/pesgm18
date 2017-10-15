@@ -3,12 +3,12 @@ Z = exp(1i*pi/4);
 V0 = 1.0;
 S0 = 0.08+0.02*1i;
 Vp = 1.06;
-Qgen = 0.03;
+Qgen = 0.1;
 
 
 
 pg = (-0.1:0.01:1.2);
-qg = (-0.35:0.01:0.05);
+qg = (-0.7:0.01:0.05);
 
 [Pg,Qg] = meshgrid(pg,qg);
 
@@ -19,7 +19,7 @@ Sg = Pg + 1i*Qg;
 [ Se,Sg,Snb,Snd,Snp ] = calc_s1( Sg,S0,Qgen(1),Z,Vp,V0 );
 
 % contour(Pg,Qg,sqrt(V2),(0.6:0.05:1.1)); axis equal; hold on;
-contour(Pg,Qg,real(Sl)); axis equal; hold on;
+contour(Pg,Qg,Pg-real(Sl)); axis equal; hold on;
 contour(Pg,Qg,sqrt(V2),(Vp:0.001:Vp+0.001),'r','Linewidth',2);
 contour(Pg,Qg,sqrt(V2),(0.9:0.001:0.9+0.001),'b','Linewidth',2);
 plot(-real(S0),-imag(S0),'kx')
