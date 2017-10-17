@@ -1,9 +1,10 @@
 % solar curves
 clc
-fig_loc = 'C:\Users\Matt\Desktop\wc171016\figures\';
+fig_loc = 'C:\Users\chri3793\Documents\DPhil\malcolm_updates\wc171016\figures\';
 
 delta = 23.65*pi/180;
 
+atan(cot(delta)/1e-3)*180/pi % North pole
 atan(cot(delta)/1)*180/pi % Lulea, Fairbanks, Reykjavik
 atan(cot(delta)/2)*180/pi % Paris, Winnipeg
 atan(cot(delta)/4)*180/pi % Houston, New Dehli
@@ -18,13 +19,12 @@ w = pi/12; %rad/hour
 k = 2;
 Ps_pk = 1.0;
 
-Pgd = 0.8;
+Pgd = 0.55;
 
 Ps = Ps_pk*(1 + k*cos(w*t))/(1+k);
 Ps = Ps.*(Ps>0);
 Pshade1 = Pgd*ones(size(Ps))./(Ps>Pgd);
 Pshade2 = Ps./(Ps>Pgd);
-
 
 plot(t+12,Ps,'Linewidth',2); hold on;
 
@@ -35,13 +35,13 @@ plot(xs(1:2),Pgd*[1 1],'k--');
 plot(t1*[1 1]+12,xs(3:4),'k:');
 plot(-t1*[1 1]+12,xs(3:4),'k:');
 
-arrow([3 0.8],[3 0.7]);
-arrow([3 0.8],[3 0.9]);
+arrow([3 Pgd],[3 Pgd-0.1]);
+arrow([3 Pgd],[3 Pgd+0.1]);
 shadedplot(t+12,Pshade1,Pshade2,[0.5 0.3 0.5],'k'); hold on;
 
 xlabel('Hour');
 ylabel('Pn/Hat(Pn)');
-legend('P_S','Dot(Pn)','t1','Location','East'); grid on;
+legend('P_S','Dot(Pn)','t1'); grid on;
 
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
