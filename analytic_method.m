@@ -2,11 +2,11 @@ clear all; close all; clc
 
 fig_loc = 'C:\Users\chri3793\Documents\DPhil\malcolm_updates\wc171016\figures\';
 
-Vp = 1.06;
-V0 = 1.05;
+Vp = 1.00;
+V0 = 0.9;
 Z = 0.203*exp(1i*acot(1.85)); %see PSCC paper
-S0 = 0.72*exp(1i*9.4*pi/180);
-
+% S0 = 0.72*exp(1i*9.4*pi/180);
+S0 = 0;
 Qgen = 1;
 
 ds = 0.003;

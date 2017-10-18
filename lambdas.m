@@ -4,9 +4,9 @@ function [ lz,lr,lx,R,X ] = lambdas( Z )
 R = real(Z);
 X = imag(Z);
 
-lz = R/X;
-lr = R/abs(Z);
-lx = X/abs(Z);
+lz = R./X;
+lr = R./abs(Z);
+lx = X./abs(Z);
 
 end
 
