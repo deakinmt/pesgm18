@@ -17,5 +17,7 @@ lz_p0= V0./sqrt( 4*(Vp.^2) - (V0.^2) )
 % lr_c.*lr_p
 
 %%
+lz_i = sqrt( lv.^2 - 1 )
 
-lz_i = sqrt( lv.^2 - 1)
+
+
