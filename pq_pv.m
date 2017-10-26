@@ -12,5 +12,5 @@ qpv = Sbar.*( (lx.*(lv.^2)) - sqrt( lv.^2 - (lv.^4.*lr.^2) + (2*lv.^2.*lr.*xx./S
                                                         - (xx./Sbar).^2 ) );
 
 
-end
 
+end

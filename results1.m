@@ -87,16 +87,11 @@ set(gca,'xscale','log'); clabel(cc);
 
 dQgdPg = -((lv.^2).*lr)./sqrt( (lv.^2) - ( (lv.^4).*(lr.^2) ) );
 
-
-dPldPg = ((2*R)./(abs(Z).^2)).*(R + (X.*dQgdPg) );
+%%
+dPldPg = ((2*R)./(abs(Z).^2)) .*(R + (X.*dQgdPg) );
 dPldPg  = dPldPg + 0./(imag(dPldPg)==0);
 
-dP0dPg = 1 - dPldPg;
-
-% subplot(121)
-% cc = contourf(lz,V0,log10(abs(dP0dPg)),(-1:0.1:1) );
-cc = contourf(lz,V0,real(dP0dPg),(0:0.1:1.5));
-% cc = contourf(lz,V0,log10(abs(dPldPg)) );
+cc = contourf(lz,V0,log10(abs(dPldPg)) );
 set(gca,'xscale','log'); clabel(cc)
 legend('log10( -dPtdQn(Qn = 0) )','Location','NorthWest');
 xlabel('$\lambda _{z}$'); ylabel('$V_{0}$');

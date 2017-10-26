@@ -36,8 +36,6 @@ DSSText.Command='new monitor.genvi element=generator.gen terminal=1 mode=32 VIPo
 [Pg, Qg] = meshgrid(Ssc*FF.pg_ssc,Ssc*FF.qg_ssc);
 Pf = sign(Qg).*Pg./sqrt(Pg.^2 + Qg.^2);
 
-AllNames = DSSCircuit.AllElementNames;
-
 totlss = zeros(numel(Pg),2);
 totpwr = zeros(numel(Pg),2);
 VgenMes = zeros(numel(Pg),1); 
@@ -68,19 +66,13 @@ for i = 1:numel(Pg)
     totpwr(i,:) = DSSObj.ActiveCircuit.TotalPower/sb; %pu
 end
 toc
-[VgenMes VmaxMes]
+% [VgenMes VmaxMes];
 % withdraw results
 DSSMon=DSSCircuit.Monitors; DSSMon.name='genvi';
 DSSText.Command='show monitor genvi'; % this has to be in for some reason?
-Vgen_lin = ExtractMonitorData(DSSMon,1,vbN*1e3/sqrt(3)); %phase 1
-Vgen_lin2 = ExtractMonitorData(DSSMon,2,vbN*1e3/sqrt(3)); %phase 2
-Vgen_lin3 = ExtractMonitorData(DSSMon,3,vbN*1e3/sqrt(3)); %phase 3
-Vgen1=reshape(Vgen_lin,size(Pg));
-Vgen2=reshape(Vgen_lin2,size(Pg));
-Vgen3=reshape(Vgen_lin3,size(Pg));
 
 VmaxMat = reshape(VmaxMes,size(Pg));
-VgenMat = reshape(VgetMat,size(Pg));
+VgenMat = reshape(VgenMes,size(Pg));
 
 DSSMon=DSSCircuit.Monitors; DSSMon.name='genpq';
 DSSText.Command='show monitor genpq';
@@ -90,31 +82,62 @@ Qgen_lin = -ExtractMonitorData(DSSMon,2,1)/sb; %pu, +ve is generation
 %%
 
 TotPwr = reshape(totpwr(:,1),size(Pg)) + 1i*reshape(totpwr(:,2),size(Pg)); %-ve implies load
-
+TotLss = reshape(totlss(:,1),size(Pg)) + 1i*reshape(totlss(:,2),size(Pg)); %-ve implies load
 Pgenmat=reshape(Pgen_lin,size(Pg));
 Qgenmat=reshape(Qgen_lin,size(Pg));
 
-subplot(121)
-cc = contour(Pg/sb,Qg/sb,0.2*Pgenmat,30); axis equal; clabel(cc);
-subplot(122)
-cc = contour(Pg/sb,Qg/sb,Qgenmat,30); axis equal; clabel(cc);
+dQ = 2e-2;
+dV = 8e-3;
+Ps0 = linspace(0,max(FF.Ps),numel(FF.Ps));
+% [ idx{1},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,dQ,Vp,FF.Ps,dQ,dV,0 );
+% [ idx{6},~,~,ShatI ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,inf,Vp,FF.Ps,dQ,dV,0 );
+% QhatI = imag(ShatI);
+% [ idx{2},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(1/5),Vp,FF.Ps,dQ,dV,0 );
+% [ idx{3},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(2/5),Vp,FF.Ps,dQ,dV,0 );
+% [ idx{4},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(3/5),Vp,FF.Ps,dQ,dV,0 );
+% [ idx{5},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(4/5),Vp,FF.Ps,dQ,dV,0 );
 
+[ idx{1},Sbar,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,dQ,Vp,Ps0,dQ,dV,0 );
+[ idx{6},~,~,ShatI ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,inf,Vp,Ps0,dQ,dV,1 );
+QhatI = imag(ShatI);
+[ idx{2},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(1/5),Vp,Ps0,dQ,dV,0 );
+[ idx{3},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(2/5),Vp,Ps0,dQ,dV,0 );
+[ idx{4},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(3/5),Vp,Ps0,dQ,dV,0 );
+[ idx{5},~,~,~ ] = find_qsln_idx( Pgenmat,Qgenmat,VmaxMat,VgenMat,QhatI*(4/5),Vp,Ps0,dQ,dV,0 );
+
+Ptrmat = Pgenmat - real(TotLss);
+
+Pnt = cell(size(idx));
+Qnt = cell(size(idx));
+Ptr = cell(size(idx));
+for i = 1:numel(idx)
+    subplot(311)
+    plot(Pgenmat(idx{i})); hold on;
+    subplot(312)
+    plot(Qgenmat(idx{i})); hold on;
+    subplot(313)
+    plot(Ptrmat(idx{i})); hold on;
+    
+    Pnt{i} = Pgenmat(idx{i});
+    pnt(i) = sum(Pnt{i});
+    Qnt{i} = Pgenmat(idx{i});
+    Ptr{i} = Ptrmat(idx{i});
+    ptr(i) = sum(Ptr{i});
+end
+
+
+%%
+% plot(Pgenmat(idx{6}),Ptrmat(idx{6})./Pgenmat(idx{6})); hold on;
+figure;
+plot(-Qgenmat(idx{6}),Ptrmat(idx{6})); hold on;
+plot(-Qgenmat(idx{6}),Pgenmat(idx{6})); hold on;
+plot(-Qgenmat(idx{6}),TotLss(idx{6})); hold on; axis equal
+xlabel('Qg (pu)'); ylabel('P. (pu)');
 %% calculate maximum power export s.t. voltage + current constraints:
-VNaN_outs = 0./(VmaxMat<Vp);
-Vg_inV = VmaxMat + VNaN_outs; % remove numbers where the voltage is too high
+    Vg_inV = VmaxMat + VNaN_outs; % remove numbers where the voltage is too high
 Vmn = (Vg_inV==max(Vg_inV));
 Vmax_pwr = max(real(TotPwr(Vmn)),[],2); % for each row, find the max power
 PgenV = Pgenmat(Vmn);
-
-INaN_outs = 0./((ImaxMat<Ip).*(VmaxMat<Vp).*(VmaxMat>1.05)) ;
-Vg_inI = VmaxMat + INaN_outs; % remove high voltages and currents
-% NB The maximum voltage never drops below 1.05 due to the source on the
-% feeder, and so in addition to removing overvoltages, we also remove
-% values at 1.05 (which are not on the voltage or thermal limit). This is
-% required as OpenDSS does seem to allow us to choose Sgen at 
-% generators accurately at these high power ratings.
-Imn = (Vg_inI==max(Vg_inI));
-Imax_pwr = max(real(TotPwr(Imn)),[],2); % for each row, find the max power
 
 % Find 2 bus voltages, currents, reactive powers:
 [S0,Sg,Sl,~,Iest_pu,P0,Q0] = pred_S0_pscc( PgenV, Sload, Z, V0, Vp  );

@@ -13,7 +13,7 @@ atan(cot(delta)/1e3)*180/pi % Nairobi, Singapore
 %%
 fig_name = [fig_loc,'solar_curves'];
 fig = figure('Color','White');
-t = (-12:0.05:11.5);
+t = (-12:1/(60):12-1/(60));
 w = pi/12; %rad/hour
 
 k = 2;
@@ -42,7 +42,7 @@ shadedplot(t+12,Pshade1,Pshade2,[0.5 0.3 0.5],'k'); hold on;
 xlabel('Hour');
 ylabel('Pn/Hat(Pn)');
 legend('P_S','Dot(Pn)','t1'); grid on;
-
+save('solar_curves_dataset.mat','Ps','t');
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 %%
