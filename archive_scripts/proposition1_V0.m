@@ -55,63 +55,63 @@ xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 
-%% The minimum error: differential loss (analytic version)
-fig = figure('Color','White');
-fig_name = [fig_loc,'dPldPg'];
+%% The minimum error: differential loss (numerical version)
+Pnb = real(Snb);
+Pnbb = Pnb + (1e-3)*dP;
+[ ~,Qnbb ] = pq_pv( Pnbb,Z,Vg,V0 );
+Snbb = Pnbb+ 1i*Qnbb;
 
-dQgdPg = ( Pnb.*(aZ.^2) - (R.*(Vg.^2)) )./ ...
-            sqrt( (X.*(Vg.^2)).^2 - (aZ.^2).*( ...
-                    (aZ.*Pnb).^2 - 2*Pnb.*R.*(Vg.^2) + (Vg.^2).*(Vg.^2 - V0.^2)...
-                                                    )  ); 
+[~,~,Plbb,~] = V2_Sl_calc( Snbb,Z,V0,'p' );
 
-dPldPg = ((2*R)./(abs(Z).^2)) .*(R + (X.*dQgdPg) );
-dPldPg  = dPldPg + 0./(imag(dPldPg)==0);
+dLbb = Plbb - Plb;
+dPbb = real(Snbb - Snb);
 
-[cc,hh] = contourf(lz,V0,dPldPg,(-0.15:0.05:0.7) ); hold on; 
-QQQQ = [-0.05,0,0.05,(0.1:0.1:0.5)];
-clabel(cc,QQQQ); set(gca,'xscale','log'); 
-xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
+dLbbdPbb = 100*dLbb./dPbb;
+cc = contourf(lz,V0,dLbbdPbb ); hold on; clabel(cc)
 xs = axis;
-V_min = 1.007;
+V_min = 1.008;
 lz_max = 0.63;
 plot(xs(1:2),V_min*[1 1],'k-.');
 plot(lz_max*[1 1],xs(3:4),'k');
 
-% export_fig(fig,fig_name);
-% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
-
-
-%% Proposition 2: Error at a power factor of 98% ?
-kk = 0.1;
-
-BX = (Vg.^4).*( (R.^2 - (X.*kk).^2) + ((aZ.*kk).^2).*( 1 - ((V0./Vg).^2) ) );
-
-Pn_kk = ( ((Vg./aZ).^2).*R ).*( 1 - sqrt( ...
-                                1 - (BX./( (1 + kk.^2).*(R.^2).*(Vg.^4) )) ) );
-
-Qn_kk = pq_pv( Pn_kk,Z,Vg,V0 );
-Qn_kk = Qn_kk + 0./(imag(Qn_kk)==0);
-
-Sn_kk = Pn_kk + 1i*Qn_kk;
-PF_kk = Pn_kk./abs(Sn_kk);
-
-% cc = contourf(lz,V0,PF_kk,(0.9:0.02:1.1) ); hold on; clabel(cc)
-% cc = contourf(lz,V0,PF_kk,(0.9:0.02:1.1) ); hold on; clabel(cc)
-cc = contourf(lz,V0,BX ); hold on; clabel(cc)
-% cc = contourf(lz,V0,real(Qn_kk) ); hold on; clabel(cc)
-% cc = contourf(lz,V0,Qn_kk ); hold on; clabel(cc)
 set(gca,'xscale','log'); 
+xlabel('$\lambda _{z}$'); ylabel('$V_{0}$');
+
+%% The minimum error: differential loss (analytic version)
+
+dQgdPg = ( Pnb.*(aZ.^2) - (R.*(Vg.^2)) )./ ...
+            sqrt( (X.*(Vg.^2)).^2 - (aZ.^2).*( ...
+                    (aZ.*Pnb).^2 - 2*Pnb.*R.*(Vg.^2) + (Vg.^2).*(Vg.^2 - V0.^2)...
+                                                    )  );
+
+dPldPg = ((2*R)./(abs(Z).^2)) .*(R + (X.*dQgdPg) );
+dPldPg  = dPldPg + 0./(imag(dPldPg)==0);
+
+cc = contourf(lz,V0,dPldPg ); hold on; clabel(cc); set(gca,'xscale','log'); 
+
 xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
 
 
-
-
-
 %%
+
 cc = contour(lz,nu,dLbbdPbb,'b' ); hold on; clabel(cc); hold on;
 cc = contour(lz,nu,100*dLdP,'g' ); hold on; clabel(cc)
 contour(lz,nu,(imag(Snb)==0),'k');
 set(gca,'xscale','log'); 
 xlabel('$\lambda _{z}$'); ylabel('$V_{0}/V_{+}$');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
