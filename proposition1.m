@@ -59,10 +59,13 @@ xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
 fig = figure('Color','White');
 fig_name = [fig_loc,'dPldPg'];
 
-dQgdPg = ( Pnb.*(aZ.^2) - (R.*(Vg.^2)) )./ ...
-            sqrt( (X.*(Vg.^2)).^2 - (aZ.^2).*( ...
+Pnb = real(Snb);
+
+BX = (X.*(Vg.^2)).^2 - (aZ.^2).*( ...
                     (aZ.*Pnb).^2 - 2*Pnb.*R.*(Vg.^2) + (Vg.^2).*(Vg.^2 - V0.^2)...
-                                                    )  ); 
+                                                    );
+
+dQgdPg = ( Pnb.*(aZ.^2) - (R.*(Vg.^2)) )./sqrt(BX);
 
 dPldPg = ((2*R)./(abs(Z).^2)) .*(R + (X.*dQgdPg) );
 dPldPg  = dPldPg + 0./(imag(dPldPg)==0);
@@ -79,7 +82,20 @@ plot(lz_max*[1 1],xs(3:4),'k');
 
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+%%
 
+d2Pl_dPg2 = ((aZ.^2)./(BX.^1.5)).*( BX + ( Pnb.*(aZ.^2) - R*(Vg.^2) ).^2 );
+
+[cc,hh] = contourf(lz,V0,log(d2Pl_dPg2) ); hold on; 
+clabel(cc); set(gca,'xscale','log'); 
+xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
+
+
+
+
+%%
+[cc] = contourf(lz,V0,dPldPg./Pnb ); hold on; 
+clabel(cc); set(gca,'xscale','log'); 
 
 %% Proposition 2: Error at a power factor of 98% ?
 kk = 0.1;

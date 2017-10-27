@@ -4,7 +4,7 @@
 clear all; close all; 
 fig_loc = 'C:\Users\chri3793\Documents\DPhil\malcolm_updates\wc171023\figures\';
 
-addpath('pesgm_funcs');
+% addpath('pesgm_funcs');
 
 set(0,'defaulttextinterpreter','latex');
 set(0,'defaultaxesfontsize',12);
@@ -57,16 +57,17 @@ xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
 
 %% The minimum error: differential loss (numerical version)
 Pnb = real(Snb);
-Pnbb = Pnb + (1e-3)*dP;
+dlta = 1e-5;
+Pnbb = Pnb + dlta*dP;
 [ ~,Qnbb ] = pq_pv( Pnbb,Z,Vg,V0 );
 Snbb = Pnbb+ 1i*Qnbb;
 
 [~,~,Plbb,~] = V2_Sl_calc( Snbb,Z,V0,'p' );
 
 dLbb = Plbb - Plb;
-dPbb = real(Snbb - Snb);
+dPnbb = real(Snbb - Snb);
 
-dLbbdPbb = 100*dLbb./dPbb;
+dLbbdPbb = 100*dLbb./dPnbb;
 cc = contourf(lz,V0,dLbbdPbb ); hold on; clabel(cc)
 xs = axis;
 V_min = 1.008;
@@ -76,6 +77,16 @@ plot(lz_max*[1 1],xs(3:4),'k');
 
 set(gca,'xscale','log'); 
 xlabel('$\lambda _{z}$'); ylabel('$V_{0}$');
+
+%% Curvature
+d2L = dLbbdPbb - Plb;
+
+d2LdP = d2L./dPnbb;
+cc = contourf(lz,V0,log(abs(d2LdP)) ); hold on; clabel(cc)
+set(gca,'xscale','log'); 
+xlabel('$\lambda _{z}$'); ylabel('$V_{0}$');
+
+
 
 %% The minimum error: differential loss (analytic version)
 
