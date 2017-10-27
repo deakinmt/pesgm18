@@ -1,12 +1,13 @@
 close all; clear all; clc;
-% cd('C:\Users\chri3793\Documents\MATLAB\DPhil\pesgm18_mtlb')
-cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb');
+cd('C:\Users\chri3793\Documents\MATLAB\DPhil\pesgm18_mtlb')
+% cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb');
 addpath('pesgm_funcs');
 % fig_loc = [pwd,'\figures\'];
 % fig_loc = 'C:\Users\chri3793\Documents\MATLAB\DPhil\pesgm18_mtlb\figures\';
 fig_loc = 'C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb\figures\';
 %%
-cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb')
+cd('C:\Users\chri3793\Documents\MATLAB\DPhil\pesgm18_mtlb')
+% cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb')
 % INPUTS TO DETERMINE BEHAVIOUR -------------------
 F.Vp = 1.06; %pu
 % F.pg_ssc = linspace(-1e-3,0.2,50);
@@ -17,7 +18,6 @@ F.Vp = 1.06; %pu
 
 F.pg_ssc = linspace(-1e-3,0.2,100);
 F.qg_ssc = linspace(-0.4,1e-3,300);
-
 
 % remain the same:
 F.SRC = 'SOURCEBUS';
