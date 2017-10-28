@@ -1,0 +1,8 @@
+function [ Pb,ppval ] = find_pb_pp( PP,QQ,VG,Vp )
+
+
+VNaN_outs = 0/(VG
+
+
+end
+

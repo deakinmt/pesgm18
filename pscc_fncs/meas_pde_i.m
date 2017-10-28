@@ -7,6 +7,7 @@ numPDE = DSSCircuit.PDElements.Count;
 i = 1;
 I = nan*zeros(8,numPDE)*(1 + 1i);
 B = cell(2,numPDE);
+
 while iElement >0
     Inom = DSSCircuit.ActiveCktElement.Currents';
     Iii = Inom(1:2:end) + 1i*Inom(2:2:end);
