@@ -32,7 +32,7 @@ Sload = (1769 + 294*1i)/sb; %feeder nominal load power
 % create generator at given node:
 DSSText.Command=['new generator.gen phases=3 bus1=',FF.NUT,'.1.2.3 kw=0 pf=0'];
 DSSText.Command='new monitor.genpq element=generator.gen terminal=1 mode=65 PPolar=no';
-DSSText.Command='new monitor.genvi element=generator.gen terminal=1 mode=32 VIPolar=yes';
+% DSSText.Command='new monitor.genvi element=generator.gen terminal=1 mode=32 VIPolar=yes';
 %% Run the DSS
 [Pg, Qg] = meshgrid(Ssc*FF.pg_ssc,Ssc*FF.qg_ssc);
 Pf = sign(Qg).*Pg./sqrt(Pg.^2 + Qg.^2);
@@ -69,8 +69,8 @@ end
 toc
 
 % withdraw results
-DSSMon=DSSCircuit.Monitors; DSSMon.name='genvi';
-DSSText.Command='show monitor genvi'; % this has to be in for some reason?
+% DSSMon=DSSCircuit.Monitors; DSSMon.name='genvi';
+% DSSText.Command='show monitor genvi'; % this has to be in for some reason?
 
 VmaxMat = reshape(VmaxMes,size(Pg));
 VgenMat = reshape(VgenMes,size(Pg));
@@ -86,26 +86,22 @@ TotLss = reshape(totlss(:,1),size(Pg)) + 1i*reshape(totlss(:,2),size(Pg)); %-ve 
 Pgenmat=reshape(Pgen_lin,size(Pg));
 Qgenmat=reshape(Qgen_lin,size(Pg));
 
-dQ = 2e-2;
-dV = 8e-3;
+Qgd = zeros(FF.n,numel(FF.Ps0_k));   e_L = zeros(FF.n,numel(FF.Ps0_k));
+D_Eg = zeros(FF.n,numel(FF.Ps0_k));  D_Et = zeros(FF.n,numel(FF.Ps0_k));
 
-Qn = zeros(FF.n,numel(FF.Ps0_k));    e_L = zeros(FF.n,numel(FF.Ps0_k));
-D_En = zeros(FF.n,numel(FF.Ps0_k));  D_Et = zeros(FF.n,numel(FF.Ps0_k));
-
-[ Pb_fdr,Pp_fdr ] = find_pb_pp( Pgenmat,TotLss,VgenMat,Vp,1 );
-
+[ Pb_fdr,Pp_fdr ] = find_pb_pp( Pgenmat,TotLss,VgenMat,Vp );
 
 tic
 for i = 1:numel(FF.Ps0_k)
     i
     Ps = FF.Ps0*( Pb_fdr + (Pp_fdr - Pb_fdr)*FF.Ps0_k(i));
-    [ Qn(:,i),D_En(:,i),D_Et(:,i),e_L(:,i) ] = calc_DE_EL( Ps,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
+    [ Qgd(:,i),D_Eg(:,i),D_Et(:,i),e_L(:,i) ] = calc_DE_EL( Ps,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
 %     [ Qn(:,i),D_En(:,i),D_Et(:,i),e_L(:,i) ] = calc_DE_EL( FF.Ps0_k(i)*FF.Ps0,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
 end
 toc
 
 tic
-[ Qn_est,D_En_est,D_Et_est,e_L_est ] = estm_DE_EL( FF.Ps,FF.Ps0_k,Sload,Z,Vp,V0,20*FF.n );
+[ Qgd_est,D_Eg_est,D_Et_est,e_L_est ] = estm_DE_EL( FF.Ps0,FF.Ps0_k,Sload,Z,Vp,V0,FF.n );
 toc
 
 % subplot(211)
@@ -148,15 +144,16 @@ toc
 % RR.Psub_prm = [Psub_prm_meas;Psub_prm_est];
 % RR.Pgen_prm = [Pgen_prm_meas;Pgen_prm_est];
 
-RR.Qn = Qn;
-RR.D_En = D_En;
+RR.Qgd = Qgd;
+RR.D_Eg = D_Eg;
 RR.D_Et = D_Et;
 RR.e_L = e_L;
 
-RR.D_En_est = D_En_est;
+RR.Qgd_est = Qgd_est;
+RR.D_Eg_est = D_Eg_est;
 RR.D_Et_est = D_Et_est;
 RR.e_L_est = e_L_est;
-RR.Qn_est = Qn_est;
+
 
 RR.sbase = sb; RR.Z = Z; RR.Zabs = abs(Z); RR.lz = lambdas(Z); RR.V0 = V0;
 RR.Ssc = Ssc; %kW 

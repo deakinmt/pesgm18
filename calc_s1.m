@@ -2,7 +2,6 @@ function [ St,Sg,Snb,Snd,Snp ] = calc_s1( Ps,S0,Qgen,Z,Vp,V0 )
 
 P0 = real(S0); Q0 = imag(S0);
 
-
 [ Snb,Snd,Snp ] = calc_xpts( Q0,Qgen,Z,Vp,V0 );
 
 Pnb = real(Snb); Pnd = real(Snd); Qnd = imag(Snd);

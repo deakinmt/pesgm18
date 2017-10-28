@@ -11,22 +11,18 @@ cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb')
 % INPUTS TO DETERMINE BEHAVIOUR -------------------
 F.Vp = 1.06; %pu
 
-F.pg_ssc = linspace(-1e-3,0.2,100);
-F.qg_ssc = linspace(-0.4,1e-3,100);
-F.n = 40;
+% F.pg_ssc = linspace(-1e-6,0.2,100);
+% F.qg_ssc = linspace(-0.4,1e-6,100);
+% F.n = 30;
 
-% F.pg_ssc = linspace(-1e-3,0.2,300);
-% F.qg_ssc = linspace(-0.4,1e-3,500);
-% F.n = 20;
-
-% F.V0 = 1.10;
-% F.Ps0_k = [1.0 0.75 0.5];
-
-F.V0 = 1.05;
-F.Ps0_k = [1.0 0.7 0.4];
+F.pg_ssc = linspace(-1e-6,0.2,400);
+F.qg_ssc = linspace(-0.4,1e-6,600);
+F.n = 80;
 
 % F.V0 = 1.00;
-% F.Ps0_k = [1.0 0.75 0.5];
+F.V0 = 1.10;
+% F.V0 = 1.00;
+F.Ps0_k = [1.0 0.8 0.6 0.4 0.2];
 
 % remain the same:
 F.SRC = 'SOURCEBUS';
@@ -48,47 +44,45 @@ F.NUT = '834';
 pl_options={'X'};
 [ RR,figs ] = run_pesgm_feeder( F,pl_options );
 
-
 %%
-fig = figure('Color','White','Position',[100 100 1000 900]); 
-figname = [fig_loc,'nominal_result_'];
+fig = figure('Color','White','Position',[100 100 750 700]); 
+figname = [fig_loc,'nominal_result_110'];
 
 subplot(221)
-plot(RR.Qn/min(RR.Qn),RR.D_En); hold on;
-plot(RR.Qn/min(RR.Qn),RR.D_Et,'--'); hold on;
-
-plot(RR.Qn/min(RR.Qn),RR.D_En); hold on;
-plot(RR.Qn/min(RR.Qn),RR.D_Et,'--'); hold on;
-
-xlabel('Qn/dot(Qn)');
-ylabel('Utility, (energy/day)');
+plot(RR.Qgd(:,1:2:5)/min(RR.Qgd(:,1:2:5)),RR.D_Eg(:,1:2:5)); hold on;
+plot(RR.Qgd(:,1:2:5)/min(RR.Qgd(:,1:2:5)),RR.D_Et(:,1:2:5),'--'); hold on;
+xlabel('Qg/dot(Qg)');
+ylabel('Energy/day');
 xs = axis; grid on;
+legend('Eg, 1.0','Eg, 0.6','Eg, 0.2','Et, 1.0','Et, 0.6','Et, 0.2','Location','NorthWest');
+title('Measured Utility');
 
 subplot(222)
-plot(RR.Qn_est/min(RR.Qn_est),RR.D_En_est); hold on;
-plot(RR.Qn_est/min(RR.Qn_est),RR.D_Et_est,'--'); hold on;
-
-xlabel('Qn/dot(Qn)');
-ylabel('Utility, estimated');
+plot(RR.Qgd_est(:,1:2:5)/min(RR.Qgd_est(:,1:2:5)),RR.D_Eg_est(:,1:2:5)); hold on;
+plot(RR.Qgd_est(:,1:2:5)/min(RR.Qgd_est(:,1:2:5)),RR.D_Et_est(:,1:2:5),'--'); hold on;
+xlabel('Qg/dot(Qg)');
+ylabel('Energy/day');
 axis(xs); grid on;
-
-subplot(224)
-% plot(RR.Qn_est/min(RR.Qn_est),RR.e_L_est);
-plot(-RR.Qn_est,RR.e_L_est);
-
-xlabel('Qn/dot(Qn)');
-ylabel('eps_L estimated, %');
-grid on;
-xs = axis;
+legend('Eg, 1.0','Eg, 0.6','Eg, 0.2','Et, 1.0','Et, 0.6','Et, 0.2','Location','NorthWest');
+title('Estimated Utility');
 
 subplot(223)
-% plot(RR.Qn/min(RR.Qn),RR.e_L); hold on;
-plot(-RR.Qn,RR.e_L); hold on;
-
-xlabel('Qn/dot(Qn)');
+plot(RR.Qgd/min(RR.Qgd),RR.e_L); hold on;
+xlabel('Qg/dot(Qg)');
 ylabel('eps_L, %');
-axis(xs);
 xs = axis; grid on; 
+plot([0.01 0.99],10*[1 1],'k--');
+legend('1.0','0.8','0.6','0.4','0.2','Location','NorthWest');
+title('Measured Error');
+
+subplot(224)
+plot(RR.Qgd_est/min(RR.Qgd_est),RR.e_L_est); hold on;
+xlabel('Qg/dot(Qg)');
+ylabel('eps_L %');
+legend('1.0','0.8','0.6','0.4','0.2','Location','NorthWest');
+title('Estimated Error');
+xs = axis; grid on;
+plot([0.01 0.99],10*[1 1],'k--');
 
 % export_fig(fig,figname);
 % export_fig(fig,[figname,'.pdf'],'-dpdf');

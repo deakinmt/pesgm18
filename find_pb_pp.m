@@ -1,5 +1,4 @@
-function [ Pb,Pp ] = find_pb_pp( PP,LL,VG,Vp,pdim )
-
+function [ Pb,Pp ] = find_pb_pp( PP,LL,VG,Vp )
 
 VNaN_outs = 0./(VG<Vp);
 PP = PP+VNaN_outs;
