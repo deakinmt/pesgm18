@@ -31,7 +31,6 @@ Sload = (1769 + 294*1i)/sb; %feeder nominal load power
 % create generator at given node:
 DSSText.Command=['new generator.gen phases=3 bus1=',FF.NUT,'.1.2.3 kw=0 pf=0'];
 DSSText.Command='new monitor.genpq element=generator.gen terminal=1 mode=65 PPolar=no';
-% DSSText.Command='new monitor.genvi element=generator.gen terminal=1 mode=32 VIPolar=yes';
 %% Run the DSS
 [Pg, Qg] = meshgrid(Ssc*FF.pg_ssc,Ssc*FF.qg_ssc);
 Pf = sign(Qg).*Pg./sqrt(Pg.^2 + Qg.^2);
@@ -54,7 +53,6 @@ for i = 1:numel(Pg)
     DSSSolution.Solve;
     DSSCircuit.Sample;
     
-    
     YNodeVarray = DSSCircuit.YNodeVarray';
     YNodeV = YNodeVarray(1:2:end) + 1i*YNodeVarray(2:2:end);
     VgenMes(i) = abs(AA'*YNodeV(NBus))/(vbN*1e3);
@@ -66,10 +64,6 @@ for i = 1:numel(Pg)
     totpwr(i,:) = DSSObj.ActiveCircuit.TotalPower/sb; %pu
 end
 toc
-
-% withdraw results
-% DSSMon=DSSCircuit.Monitors; DSSMon.name='genvi';
-% DSSText.Command='show monitor genvi'; % this has to be in for some reason?
 
 VmaxMat = reshape(VmaxMes,size(Pg));
 VgenMat = reshape(VgenMes,size(Pg));
@@ -95,53 +89,12 @@ for i = 1:numel(FF.Ps0_k)
     i
     Ps = FF.Ps0*( Pb_fdr + (Pp_fdr - Pb_fdr)*FF.Ps0_k(i));
     [ Qgd(:,i),D_Eg(:,i),D_Et(:,i),e_L(:,i) ] = calc_DE_EL( Ps,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
-%     [ Qn(:,i),D_En(:,i),D_Et(:,i),e_L(:,i) ] = calc_DE_EL( FF.Ps0_k(i)*FF.Ps0,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
 end
 toc
 
 tic
 [ Qgd_est,D_Eg_est,D_Et_est,e_L_est ] = estm_DE_EL( FF.Ps0,FF.Ps0_k,Sload,Z,Vp,V0,FF.n );
 toc
-
-% subplot(211)
-% plot(Qn/min(Qn),D_En); hold on;
-% plot(Qn/min(Qn),D_Et,'--'); hold on;
-% subplot(212)
-% plot(Qn/min(Qn),D_Et./D_En); hold on;
-
-
-% subplot(211)
-% plot(Qn/min(Qn),D_En); hold on;
-% plot(Qn/min(Qn),D_Et,'--'); hold on;
-% subplot(212)
-% plot(Qn/min(Qn),D_Et./D_En); hold on;
-
-
-% %% calculate maximum power export s.t. voltage + current constraints:
-% Vg_inV = VmaxMat + VNaN_outs; % remove numbers where the voltage is too high
-% Vmn = (Vg_inV==max(Vg_inV));
-% Vmax_pwr = max(real(TotPwr(Vmn)),[],2); % for each row, find the max power
-% PgenV = Pgenmat(Vmn);
-% 
-% % Find 2 bus voltages, currents, reactive powers:
-% [S0,Sg,Sl,~,Iest_pu,P0,Q0] = pred_S0_pscc( PgenV, Sload, Z, V0, Vp  );
-% Iest = Iest_pu*ibN;
-% 
-% %% Return results RR
-% [Pghat_est,Psub_hat_est] = lemma_1( Vp, Ip/ibN, V0, Z );
-% [Pgprm_est,Psub_prm_est] = theorem_1( Vp, V0, Z );
-% Pgen_hat_est = Pghat_est + real(Sload);
-% Pgen_prm_est = Pgprm_est + real(Sload);
-% 
-% Psub_hat_meas = Imax_pwr(end);
-% Pgen_hat_meas = Pgenmat(real(TotPwr)==Psub_hat_meas);
-% Psub_prm_meas = max(Vmax_pwr);
-% Pgen_prm_meas = Pgenmat(real(TotPwr)==Psub_prm_meas);
-% 
-% RR.Psub_hat = [Psub_hat_meas;Psub_hat_est];
-% RR.Pgen_hat = [Pgen_hat_meas;Pgen_hat_est];
-% RR.Psub_prm = [Psub_prm_meas;Psub_prm_est];
-% RR.Pgen_prm = [Pgen_prm_meas;Pgen_prm_est];
 
 RR.Qgd = Qgd;
 RR.D_Eg = D_Eg;

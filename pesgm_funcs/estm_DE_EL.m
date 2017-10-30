@@ -37,22 +37,3 @@ for i=1:numel(Ps_k)
 end
 
 e_L = 100*(D_Eg - D_Et)./D_Et;
-
-% for i = 1:n
-%     for j = 1:numel(Ps_k)
-%         Ps = Ps0*( Pgb + Ps_k(j)*( Pgp - Pgb ) );
-%         if i==1
-%             [ St0,Sg0,~,~,~ ] = calc_s1( Ps,S0,0,Z,Vp,V0 );
-%             Pg0 = sum(real(Sg0));
-%             Pt0 = sum(real(St0));
-%         end
-%         
-%         [ St,Sg,~,~,~ ] = calc_s1( Ps,S0,-Qgd(i,j),Z,Vp,V0 );
-%         D_Eg(i,j) = dt*(sum(real(Sg)) - Pg0);
-%         D_Et(i,j) = dt*(sum(real(St)) - Pt0);
-%     end
-% end
-% 
-% e_L = 100*(D_Eg - D_Et)./D_Et;
-
-
