@@ -1,7 +1,6 @@
-function [ RR,figs ] = run_pesgm_feeder( FF,pl_options )
+function RR = run_pesgm_feeder( FF )
 
 Vp = FF.Vp;
-fig_nompos = FF.fig_nompos;
 
 %% Find nominal network parameters from opendss
 
@@ -158,50 +157,6 @@ RR.e_L_est = e_L_est;
 RR.sbase = sb; RR.Z = Z; RR.Zabs = abs(Z); RR.lz = lambdas(Z); RR.V0 = V0;
 RR.Ssc = Ssc; %kW 
 RR.Sload = Sload; %in pu
-
-%% Plotting options (pl_options)
-figs = [];
-% DAFS = 14; %default axis font size
-% 
-% if sum(ismember(pl_options,'pgp0'))  || sum(ismember(pl_options,'0'))
-%     figs = [figs;figure('Color','White','Position',fig_nompos,'defaultaxesfontsize',DAFS,'defaulttextinterpreter','latex')];
-%     plot(Pgenmat(Vmn),Vmax_pwr,'x-'); grid on; hold on;
-%     plot(PgenV,P0);
-%     axis equal;
-%     axis([0 4 -1 1.5]);
-%     xs = axis;
-%     plot([1 1]*Pgen_prm_meas,xs(3:4),'k:');
-% 
-%     xlabel('$P_{gen}$ (pu)');
-%     ylabel('$P_{0}^{Sub}$ (pu)');
-%     lgnd=legend('Msrd.','Estd., (5)','$P_{g}''$, msrd.','Location','NorthWest');
-%     set(lgnd,'interpreter','latex');
-% 
-% end
-% if sum(ismember(pl_options,'pgqgq0')) || sum(ismember(pl_options,'0'))
-%     figs = [figs;figure('Color','White','Position',fig_nompos,'defaultaxesfontsize',DAFS,'defaulttextinterpreter','latex')];
-%     plot(Pgenmat(Vmn),Qgenmat(Vmn),'x-','Color',[0.3 0.3 0.3]); hold on; grid on;
-%     plot(PgenV,imag(Sg + Sload),'k');
-%     plot(Pgenmat(Vmn),imag(TotPwr(Vmn)),'x-','Color',[1.0 0.5 0.5]); hold on;
-%     plot(PgenV,Q0,'r');
-% 
-%     lgnd = legend('$Q_{gen}$ msrd.','$Q_{gen}$ estd.','$Q_{comp}$ msrd.','$Q_{comp}$ estd.');
-%     set(lgnd,'Interpreter','Latex');
-%     xlabel('$P_{gen}$ (pu)'); ylabel('$Q$ (pu)'); axis equal;
-% end
-% if sum(ismember(pl_options,'imax')) || sum(ismember(pl_options,'0'))
-%     figs = [figs;figure('Color','White','Position',fig_nompos,'defaultaxesfontsize',DAFS,'defaulttextinterpreter','latex')];%
-%     plot(Pgenmat(Vmn),ImaxMat(Vmn),'x-'); grid on; hold on;
-%     plot(PgenV,Iest); grid on; hold on;
-%     
-%     xs = axis;
-%     plot(xs(1:2),[1 1]*FF.Ip,'k--');
-%     plot([1 1]*Pgen_prm_meas,xs(3:4),'k:');
-%     plot([1 1]*Pgen_hat_meas,xs(3:4),'k-.');
-%     lgnd = legend('Max $I$, msrd.','$I_{g}$, estd.','$I_{+}$','$P_{g}''$, msrd.','$\hat{P}_{g}''$, msrd.','Location','NorthWest');
-%     set(lgnd,'Interpreter','Latex');
-%     xlabel('$P_{gen}$ (pu)'); ylabel('$|I|$ (A)');
-% end
 
 end
 

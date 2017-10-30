@@ -1,13 +1,20 @@
 clear all; close all; clc
 
-fig_loc = 'C:\Users\chri3793\Documents\DPhil\malcolm_updates\wc171016\figures\';
+addpath('pesgm_funcs');
 
+fig_loc = 'C:\Users\chri3793\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
+
+set(0,'defaulttextinterpreter','latex');
+set(0,'defaultaxesfontsize',14);
+fig_nompos = [100 100 550 320];
+
+%%
 Vp = 1.00;
 V0 = 0.9;
 Z = 0.203*exp(1i*acot(1.85)); %see PSCC paper
-% S0 = 0.72*exp(1i*9.4*pi/180);
-S0 = 0;
-Qgen = 1;
+S0 = 0.72*exp(1i*9.4*pi/180);
+% S0 = 0;
+Qgen = 0.7;
 
 ds = 0.003;
 
@@ -22,6 +29,8 @@ Sg = Pg + 1i*Qg;
 [ Se,Sg,Snb,Snd,Snp ] = calc_s1( Sg,S0,Qgen(1),Z,Vp,V0 );
 Pgh = 0.8*real(Snp);
 
+
+%------------------ PLOT
 fig_name = [fig_loc,'analytic_method'];
 fig = figure('Color','White');
 contour(Pg,Qg,Pg-real(Sl)); axis equal; hold on;
@@ -29,7 +38,7 @@ contour(Pg,Qg,Pg-real(Sl)); axis equal; hold on;
 [ ~,qg_V ] = pq_pv( pg,Z,Vp,V0 );
 plot(pg(imag(qg_V)==0),qg_V(imag(qg_V)==0),'r','Linewidth',2);
 axis([min(pg) max(pg) min(qg) max(qg)]);
-xs = axis;
+xs = axis; axis equal;
 
 plot(-real(S0),-imag(S0),'kx')
 plot(real(Snb)*[1 1],xs(3:4),'k:')
@@ -37,23 +46,30 @@ plot(real(Snd)*[1 1],xs(3:4),'k-.')
 plot(Pgh*[1 1],xs(3:4),'k--')
 plot(real(Snp)*[1 1],xs(3:4),'k')
 
-% plot the direction curve
 pg_curve = pg.*((pg<real(Snd)).*(pg>real(Snb)));
 [ ~,qg_curve ] = pq_pv( pg_curve,Z,Vp,V0 );
 
+Q_eps=1e-2;
+
+plot([-real(S0),real(Snb)],...
+     [-imag(S0)-2*Q_eps,imag(Snb)-2*Q_eps],'g','Linewidth',2);
 plot([-real(S0),real(Snb),pg_curve(pg_curve>0)],...
-     [-imag(S0),imag(Snb),qg_curve(pg_curve>0)],'g','Linewidth',2);
+     [-imag(S0)+Q_eps,imag(Snb)+Q_eps,qg_curve(pg_curve>0)],'b','Linewidth',2);
  
 [ ~,~,~,Qm ] = sln_boundary( pg,Z,V0 );
 plot(pg,Qm);
 
-xlabel('Pn'); ylabel('Qn');
-legend('Pt','Vp','S0','Pnb','Pnd','Pnh','Pnp','Straj');
+xlabel('$P_{n}$ (pu)'); ylabel('$Q_{n}$ (pu)');
+lgnd = legend('$P_{t}$','$V_{+}$','$S_{0}$','$\bar{P}_{n}$',...
+            '$\dot{P}_{n}$','$\hat{P}_{n}$','$P_{n}$',...
+            '$S_{n}^{\dot{Q}_{g}=\,0}$','$S_{n}^{\dot{Q}_{g} =\, 0.7}$');
+set(lgnd,'FontSize',16,'Interpreter','Latex');
 
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
-%%
-Z = 0.203*exp(1i*acot(0.5)); %see PSCC paper
+%% Another example
+
+Z = 0.203*exp(1i*acot(0.5));
 Qgen = 0.3;
 
 ds = 0.003;
@@ -99,46 +115,6 @@ legend('Pt','Vp','S0','Pnb','Pnd','Pnh','Pnp','Straj','Location','SouthWest');
 
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
-
-
-
-
-
-%%
-x = (-12:0.05:11.5); 
-k = [0.5,1,2,1e3];
-Qgen = (0:0.001:0.2);
-
-Ps_pk = 0.4;
-% Ps = Ps_pk*(1 + k*cos(x*pi/12))/(1+k);
-% Ps = Ps.*(Ps>0);
-% plot((0:0.5:23.5),Ps);
-%
-Eqgen = zeros(size(Qgen));
-for i = 1:numel(k)
-    Ps = Ps_pk*(1 + k(i)*cos(x*pi/12))/(1+k(i));
-    Ps = Ps.*(Ps>0);
-    for j = 1:numel(Qgen)
-        [ Se,Sg,~,~,~ ] = calc_s1( Ps,S0,Qgen(j),Z,Vp,V0 );
-        Eqgen(j) = sum(real(Se));
-    end
-    subplot(211)
-    plot(Qgen,Eqgen - Eqgen(1)); hold on;
-    subplot(212)
-    plot(Qgen(2:end),Eqgen(2:end) - Eqgen(1:end-1)); hold on;
-end
-
-%%
-sum(real(Se));
-
-Sn = Sg - S0;
-Pc = real(Sg) - Ps;
-plot(real(Se)); hold on; plot(real(Sn)); grid on;
-plot(imag(Sg)); plot(Pc);
-
-legend('Se','Sn','Qg','Pc');
-
-
 
 
 
