@@ -11,10 +11,10 @@ set(0,'defaultaxesfontsize',12);
 fig_nompos = [100 100 550 320];
 %% First off: Maximum losses, assuming 100% at MLIMPT
 fig = figure('Color','White','Position',fig_nompos);
-fig_name = [fig_loc,'mlimpt_loss_2013b'];
+fig_name = [fig_loc,'k_dot'];
 
 Vg = 1.06;
-v0_lin = linspace(0.9,1.1,1000);
+v0_lin = linspace(0.9,1.1,300);
 theta = linspace(0.01,(pi/2) - 0.01,300);
 % v0_lin = linspace(0.9,1.1,3000);
 % theta = linspace(0.01,(pi/2) - 0.01,1000);
@@ -57,11 +57,15 @@ cc = contourf(lz,V0,eps_L,[0 10 (20:20:300)]); hold on; clabel(cc)
 
 xs = axis;
 lz_min = 0.09;
-plot(lz_min*[1 1],xs(3:4),'k--');
+plot(lz_min*[1 1],xs(3:4),'k:','Linewidth',2);
 
 set(gca,'xscale','log'); 
-xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
+xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{t}$');
 colormap parula
+
+lgnd = legend('$\dot{k}$','Location','SouthWest');
+set(lgnd,'Interpreter','Latex','FontSize',16);
+
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 
@@ -93,3 +97,54 @@ plot(lz_max*[1 1],xs(3:4),'k');
 colormap parula
 % export_fig(fig,fig_name);
 % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+
+%% Error limit
+fig = figure('Color','White','Position',fig_nompos);
+fig_name = [fig_loc,'k_bar'];
+
+Kpq = (-X*(Vg.^2))./sqrt( ((R.*(Vg.^2)).^2) - (((aZ.*Vg).^2).*(Vg.^2 - V0.^2)) );
+Knum = 2.*R.*(R.*Kpq + X);
+Kb = Knum./( Knum - ((aZ.^2).*Kpq) );
+
+Kb  = Kb + 0./(imag(Kb)==0);
+
+cc = contourf(lz,V0,-real(100*Kb),100*(-0.2:0.05:1.15)); hold on; 
+clabel(cc); set(gca,'xscale','log'); 
+xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{t}$');
+
+V_min = 1.012;
+lz_max = 0.63;
+plot(xs(1:2),V_min*[1 1],'k:','Linewidth',2);
+plot(lz_max*[1 1],xs(3:4),'k:','Linewidth',2);
+
+lgnd = legend('$\bar{k}$','Location','SouthWest');
+set(lgnd,'Interpreter','Latex','FontSize',16);
+
+colormap parula
+% export_fig(fig,fig_name);
+% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
