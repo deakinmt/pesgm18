@@ -2,7 +2,7 @@ clear all; close all; clc
 
 addpath('pesgm_funcs');
 
-fig_loc = 'C:\Users\chri3793\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
+fig_loc = 'C:\Users\Matt\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
 
 set(0,'defaulttextinterpreter','latex');
 set(0,'defaultaxesfontsize',14);
@@ -60,13 +60,16 @@ plot([-real(S0),real(Snb),pg_curve(pg_curve>0)],...
 plot(pg,Qm);
 
 xlabel('$P_{n}$ (pu)'); ylabel('$Q_{n}$ (pu)');
-lgnd = legend('$P_{t}$','$V_{+}$','$S_{0}$','$\bar{P}_{n}$',...
-            '$\dot{P}_{n}$','$\hat{P}_{n}$','$P_{n}$',...
-            '$S_{n}^{\dot{Q}_{g}=\,0}$','$S_{n}^{\dot{Q}_{g} =\, 0.7}$');
+% lgnd = legend('$P_{t}$','$V_{+}$','$S_{0}$','$P_{n}^{nom}$',...
+%             '$P_{n}^{Qmax}$','$\hat{P}_{n}$','$\bar{P}_{n}$',...
+%             '$S_{n}^{Q_{g}^{Qmax}=\,0}$','$S_{n}^{Q_{g}^{Qmax} =\, 0.7}$');
+lgnd = legend('$P_{t}$','$V_{+}$','$S_{0}$','$P_{n}^{nom}$',...
+            '$P_{n}^{Qmax}$','$\hat{P}_{n}$','$P^{\prime}_{n}$',...
+            '$S_{n}(\tau,0)$','$S_{n}(\tau, 0.7)$');
 set(lgnd,'FontSize',16,'Interpreter','Latex');
 
-% export_fig(fig,fig_name);
-% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+export_fig(fig,fig_name);
+export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 %% Another example
 
 Z = 0.203*exp(1i*acot(0.5));
