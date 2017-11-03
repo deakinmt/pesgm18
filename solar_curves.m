@@ -1,6 +1,6 @@
 % solar curves
 close all; clear all; clc
-fig_loc = 'C:\Users\chri3793\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
+fig_loc = 'C:\Users\Matt\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
 
 set(0,'defaulttextinterpreter','latex');
 set(0,'defaultaxesfontsize',14);
@@ -23,7 +23,7 @@ Ps_pk = 1.0;
 
 Ps = Ps_pk*(1 + k*cos(w*t))/(1+k);
 Ps = Ps.*(Ps>0);
-% save('solar_curves_dataset.mat','Ps','t');
+% save('solar_curves_dataset.mat','Ps','t'); % to create the dataset
 %%
 Pgp = 1.08;
 Pgh = 1.0;
@@ -57,8 +57,8 @@ p4 = plot(t+12,Ps,'Linewidth',2,'Color',[0.6 0.3 0.5]); hold on;
 
 xlabel('$\tau $ (hour)');
 ylabel('$P_{g} / \hat{P}_{g}$');
-lgnd = legend([p4,p5(2),p6(2),p0,p1,p2,p3],'$P_{S}(\tau)$','$\bar{E}_{g}$','$\Delta E_{g}$','$P^{\prime}_{g}$',...
-            '$\hat{P}_{g}$','$\dot{P}_{g}(\dot{Q}_{g})$','$\bar{P}_{g}$');
+lgnd = legend([p4,p5(2),p6(2),p0,p1,p2,p3],'$P_{S}(\tau)$','$E_{g}(0)$','$\Delta E_{g}(\tilde Q_{g})$','$P^{\prime}_{g}$',...
+            '$\hat{P}_{g}$','$\tilde{P}_{g}(\tilde{Q}_{g})$','$P_{g}^{nom}$');
 set(lgnd,'Interpreter','Latex','FontSize',14);
 axis([0 24 0 1.3]);
 

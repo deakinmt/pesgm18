@@ -11,14 +11,18 @@ set(0,'defaultaxesfontsize',14);
 fig_nompossml = [100 100 300 350];
 %%
 % INPUTS TO DETERMINE BEHAVIOUR -------------------
-C = {[1.0 0.6 0.2],0.4,0.4,0.4,0.4};
-VT = {1.05,1.10,1.06,1.02,0.98};
+% C = {[1.0 0.6 0.2],0.4,0.4,0.4,0.4};
+% VT = {1.05,1.10,1.06,1.02,0.98};
 
-F.pg_ssc = linspace(-1e-6,0.2,400);
-F.qg_ssc = linspace(-0.4,1e-6,600);
-F.n = 80;
+C = {1.0,1.0,1.0};
+VT = {1.04,1.08,1.12};
+
+% WARNING! takes 3-4 minutes per run.
 % F.pg_ssc = linspace(-1e-6,0.2,400);
 % F.qg_ssc = linspace(-0.4,1e-6,600);
+F.n = 80;
+F.pg_ssc = linspace(-1e-6,0.2,100);
+F.qg_ssc = linspace(-0.4,1e-6,100);
 % F.n = 80;
 
 %-------------------------------------------------
@@ -41,6 +45,34 @@ for i = 1:numel(C)
     F.Ps0_k = C{i};
     RR{i} = run_pesgm_feeder( F );
 end
+
+
+%%
+fig = figure('Color','White','Position',fig_nompossml); 
+plot(RR{1}.Qln/(min(RR{1}.Qln)),RR{1}.eps_P*100); hold on;
+plot(RR{2}.Qln/(min(RR{2}.Qln)),RR{2}.eps_P*100);
+plot(RR{3}.Qln/(min(RR{3}.Qln)),RR{3}.eps_P*100); hold on;
+lgnd = legend('$\epsilon _{P}^{Vt=1.04}$','$\epsilon _{P}^{Vt=1.08}$',...
+                        '$\epsilon _{P}^{Vt=1.12}$','Location','NorthWest');
+set(lgnd,'Interpreter','Latex');                    
+xlabel('$Q_{g}/Q_{g}^{\prime}$');
+ylabel('$\epsilon_{P}$, \%'); grid on;
+xticks([0 0.25 0.5 0.75 1.0]);
+% export_fig(fig,figname);
+% export_fig(fig,[figname,'.pdf'],'-dpdf');
+
+fig = figure('Color','White','Position',fig_nompossml+[fig_nompossml(3) 0 0 0]); 
+plot(RR{1}.Qgd_est/min(RR{1}.Qgd_est),RR{1}.eps_P_estd*100); hold on;
+plot(RR{2}.Qgd_est/min(RR{2}.Qgd_est),RR{2}.eps_P_estd*100);
+plot(RR{3}.Qgd_est/min(RR{3}.Qgd_est),RR{3}.eps_P_estd*100);
+lgnd = legend('$\epsilon _{P}^{Vt=1.04}$','$\epsilon _{P}^{Vt=1.08}$',...
+                        '$\epsilon _{P}^{Vt=1.12}$','Location','NorthWest');
+set(lgnd,'Interpreter','Latex');
+xlabel('$Q_{g}/Q_{g}^{\prime}$');
+ylabel('$\epsilon_{P}$, \%'); grid on;
+xticks([0 0.25 0.5 0.75 1.0]);
+% export_fig(fig,figname);
+% export_fig(fig,[figname,'.pdf'],'-dpdf');
 %% PLOT #1 + #2: Measured and Estimated Utility versus c
 fig = figure('Color','White','Position',fig_nompossml); 
 figname = [fig_loc,'msrd_c_utility'];

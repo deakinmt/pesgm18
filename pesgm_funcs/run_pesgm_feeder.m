@@ -81,19 +81,18 @@ Qgenmat=reshape(Qgen_lin,size(Pg));
 
 Qgd = zeros(FF.n,numel(FF.Ps0_k));   e_L = zeros(FF.n,numel(FF.Ps0_k));
 D_Eg = zeros(FF.n,numel(FF.Ps0_k));  D_Et = zeros(FF.n,numel(FF.Ps0_k));
-
 [ Pb_fdr,Pp_fdr ] = find_pb_pp( Pgenmat,TotLss,VgenMat,Vp );
 
 tic
 for i = 1:numel(FF.Ps0_k)
     i
     Ps = FF.Ps0*( Pb_fdr + (Pp_fdr - Pb_fdr)*FF.Ps0_k(i));
-    [ Qgd(:,i),D_Eg(:,i),D_Et(:,i),e_L(:,i) ] = calc_DE_EL( Ps,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
+    [ Qgd(:,i),D_Eg(:,i),D_Et(:,i),e_L(:,i),eps_P,Qln ] = calc_DE_EL( Ps,Pgenmat,Qgenmat,VmaxMat,VgenMat,Vp,FF.n,TotLss );
 end
 toc
 
 tic
-[ Qgd_est,D_Eg_est,D_Et_est,e_L_est ] = estm_DE_EL( FF.Ps0,FF.Ps0_k,Sload,Z,Vp,V0,FF.n );
+[ Qgd_est,D_Eg_est,D_Et_est,e_L_est,eps_P_estd ] = estm_DE_EL( FF.Ps0,FF.Ps0_k,Sload,Z,Vp,V0,5*FF.n );
 toc
 
 RR.Qgd = Qgd;
@@ -105,7 +104,9 @@ RR.Qgd_est = Qgd_est;
 RR.D_Eg_est = D_Eg_est;
 RR.D_Et_est = D_Et_est;
 RR.e_L_est = e_L_est;
-
+RR.eps_P = eps_P;
+RR.Qln = Qln;
+RR.eps_P_estd = eps_P_estd;
 
 RR.sbase = sb; RR.Z = Z; RR.Zabs = abs(Z); RR.lz = lambdas(Z); RR.V0 = V0;
 RR.Ssc = Ssc; %kW 

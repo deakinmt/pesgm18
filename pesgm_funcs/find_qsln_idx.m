@@ -1,4 +1,4 @@
-function [ idx,Pbar,Sdot,Shat,Sprm ] = find_qsln_idx_v2( PP,QQ,LL,VG,Qp,Vp,Ps,plt )
+function [ idx,Pbar,Sdot,Shat,Sprm,eps_P,QQ0_ln ] = find_qsln_idx( PP,QQ,LL,VG,Qp,Vp,Ps,plt )
 
 VpNaN_outs = 0./(VG<Vp) + 0./(VG>0.9); %avoid high and low voltages
 
@@ -19,6 +19,7 @@ else
     
     PPT = PP0 - real(LL);
     PPt = max(PPT,[],1);
+    
 end
 
 
@@ -27,15 +28,28 @@ end
 Qprm = QQ0( PP0==Pprm );
 
 PP0_ln = PP0(PPT==PPt);
-PP0_ln = PP0_ln + 0./(PP0_ln<Pprm); 
+PP0_ln = PP0_ln + 0./(PP0_ln<Pprm);
+
+
 
 if isinf(Qp)
     Pabs = abs(PP0_ln - max(Ps));
     Phat = PP0_ln(Pabs==min(min(Pabs)));
     Qhat = QQ0( PP0==Phat );
+    
+    QQ0_ln = QQ0(PPT==PPt);
+    Ptbar = PPt(Pbar==PP0_ln);
+    PPt_ln = PPt(isnan(PPt)==0);
+    
+    DPg = (PP0_ln - Pbar) + 0./(PP0_ln>Pbar);
+    DPt = (PPt_ln - Ptbar) + 0./(PPt_ln>Ptbar);
+    eps_P = (DPg' - DPt)./DPt;
+    QQ0_ln = QQ0_ln + 0./(PP0_ln>Pbar);
 else
     Phat = max(Ps);
     Qhat = NaN;
+    eps_P = NaN;
+    QQ0_ln = NaN;    
 end
 
 

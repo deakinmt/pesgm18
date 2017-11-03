@@ -1,4 +1,4 @@
-function [ Qgd,D_Eg,D_Et,e_L ] = calc_DE_EL( Ps0,PPg,QQg,Vmx,Vgn,Vp,n,LL )
+function [ Qgd,D_Eg,D_Et,e_L,eps_P,Qln ] = calc_DE_EL( Ps0,PPg,QQg,Vmx,Vgn,Vp,n,LL )
 
 % inputs
 % Ps0 irradiance time series
@@ -10,14 +10,14 @@ function [ Qgd,D_Eg,D_Et,e_L ] = calc_DE_EL( Ps0,PPg,QQg,Vmx,Vgn,Vp,n,LL )
 % LL (complex) loss matrix
 dt = 1/60; % assume one minute resolution, going to MWh.
 
-[ idx{1},~,~,~ ] = find_qsln_idx_v2( PPg,QQg,LL,Vgn,0,Vp,Ps0,0 );
-[ idx{n+1},~,~,ShatI ] = find_qsln_idx_v2( PPg,QQg,LL,Vgn,-inf,Vp,Ps0,0 );
+[ idx{1},~,~,~ ] = find_qsln_idx( PPg,QQg,LL,Vgn,0,Vp,Ps0,0 );
+[ idx{n+1},~,~,ShatI,~,eps_P,Qln  ] = find_qsln_idx( PPg,QQg,LL,Vgn,-inf,Vp,Ps0,0 );
 
 QhatI = imag(ShatI);
 
 Qgd = linspace(1/n,1,n)'*QhatI;
 for i = 1:n-1
-    [ idx{i+1},~,~,~ ] = find_qsln_idx_v2( PPg,QQg,LL,Vgn,Qgd(i),Vp,Ps0,0 );
+    [ idx{i+1},~,~,~ ] = find_qsln_idx( PPg,QQg,LL,Vgn,Qgd(i),Vp,Ps0,0 );
 end
 
 D_Eg = zeros(n,1);

@@ -1,4 +1,4 @@
-function [ Qgd,D_Eg,D_Et,e_L ] = estm_DE_EL( Ps0,Ps_k,S0,Z,Vp,V0,n )
+function [ Qgd,D_Eg,D_Et,e_L,eps_P ] = estm_DE_EL( Ps0,Ps_k,S0,Z,Vp,V0,n )
 
 [ Pnp,Qnp,~ ] = pscc18_theorem_1( Vp, V0, Z );
 [ Snb,~,~ ] = calc_xpts( imag(S0),Qnp,Z,Vp,V0 );
@@ -37,3 +37,22 @@ for i=1:numel(Ps_k)
 end
 
 e_L = 100*(D_Eg - D_Et)./D_Et;
+
+
+
+%% calculate an estimate of the utility power error
+
+QNd = Qgd - imag(S0);
+% QNd = linspace(1/n,1,n)'*( Qnd );
+[ PNd,~ ] = pq_pv( QNd ,Z,Vp,V0 );
+[~,~,Pl,~] = V2_Sl_calc( PNd+1i*QNd,Z,V0,'p' );
+
+DPg = PNd - PNd(1);
+DPl = Pl - Pl(1);
+DPt = DPg - DPl;
+eps_P = (DPg - DPt)./DPt;
+
+% plot(Qgd/min(Qgd),eps_P);
+
+
+

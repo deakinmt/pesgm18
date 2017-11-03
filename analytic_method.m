@@ -64,12 +64,12 @@ xlabel('$P_{n}$ (pu)'); ylabel('$Q_{n}$ (pu)');
 %             '$P_{n}^{Qmax}$','$\hat{P}_{n}$','$\bar{P}_{n}$',...
 %             '$S_{n}^{Q_{g}^{Qmax}=\,0}$','$S_{n}^{Q_{g}^{Qmax} =\, 0.7}$');
 lgnd = legend('$P_{t}$','$V_{+}$','$S_{0}$','$P_{n}^{nom}$',...
-            '$P_{n}^{Qmax}$','$\hat{P}_{n}$','$P^{\prime}_{n}$',...
-            '$S_{n}(\tau,0)$','$S_{n}(\tau, 0.7)$');
+            '$\tilde{P}_{n}(\tilde{Q}_{g})$','$\hat{P}_{n}$','$P^{\prime}_{n}$',...
+            '$S_{n}(\tau,0)$','$S_{n}(\tau, \tilde{Q}_{g})$');
 set(lgnd,'FontSize',16,'Interpreter','Latex');
 
-export_fig(fig,fig_name);
-export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+% export_fig(fig,fig_name);
+% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 %% Another example
 
 Z = 0.203*exp(1i*acot(0.5));

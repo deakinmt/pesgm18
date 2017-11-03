@@ -8,7 +8,7 @@ cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb');addpath('pesgm_funcs');
 
 set(0,'defaulttextinterpreter','latex');
 set(0,'defaultaxesfontsize',12);
-fig_nompos = [100 100 550 320];
+fig_nompos = [100 100 550 300];
 %% First off: Maximum losses, assuming 100% at MLIMPT
 fig = figure('Color','White','Position',fig_nompos);
 fig_name = [fig_loc,'k_dot'];
@@ -53,21 +53,24 @@ eps_L = 100*(DPn - DPt)./DPt;
 % dP = real(Snp - Snb);
 % dLdP = dL./dP;
 % cc = contourf(lz,V0,100*dLdP ); hold on; clabel(cc)
-cc = contourf(lz,V0,eps_L,[0 10 (20:20:300)]); hold on; clabel(cc)
+cc = contourf(lz,V0,eps_L,[0 10 (20:20:300)]); hold on; 
+% clabel(cc)
+set(gca,'xscale','log');
+clabel(cc,'manual');
 
 xs = axis;
 lz_min = 0.09;
-plot(lz_min*[1 1],xs(3:4),'k:','Linewidth',2);
+% plot(lz_min*[1 1],xs(3:4),'k:','Linewidth',2);
 
-set(gca,'xscale','log'); 
+
 xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{t}$');
 colormap parula
 
-lgnd = legend('$\dot{k}$','Location','SouthWest');
+lgnd = legend('$k''$','Location','SouthWest');
 set(lgnd,'Interpreter','Latex','FontSize',16);
 
-% export_fig(fig,fig_name);
-% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+export_fig(fig,fig_name);
+export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 
 %% The minimum error: differential loss (analytic version)
 fig = figure('Color','White','Position',fig_nompos);
@@ -106,23 +109,23 @@ Kb = Knum./( Knum - ((aZ.^2).*Kpq) );
 Kb  = Kb + 0./(imag(Kb)==0);
 
 cc = contourf(lz,V0,-real(100*Kb),100*(-0.2:0.05:1.15)); hold on; 
-clabel(cc); set(gca,'xscale','log'); 
+set(gca,'xscale','log'); clabel(cc,'manual');
 xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{t}$');
 
 V_min = 1.012;
 lz_max = 0.63;
-plot(xs(1:2),V_min*[1 1],'k:','Linewidth',2);
-plot(lz_max*[1 1],xs(3:4),'k:','Linewidth',2);
+% plot(xs(1:2),V_min*[1 1],'k:','Linewidth',2);
+% plot(lz_max*[1 1],xs(3:4),'k:','Linewidth',2);
 
-lgnd = legend('$\bar{k}$','Location','SouthWest');
+lgnd = legend('$k_{nom}$','Location','SouthWest');
 set(lgnd,'Interpreter','Latex','FontSize',16);
 
 colormap parula
-% export_fig(fig,fig_name);
-% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
+export_fig(fig,fig_name);
+export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 
 
-%% The minimum error: differential loss (numerical version)
+%% Numerically evaluate Theorem 1 condition
 dP = real(Snp - Snb);
 dlta = 3e-6;
 
@@ -146,44 +149,7 @@ dEps_dPg = (DPg.*dPldPg - DPl)./(DPt.^2);
 
 cc = contourf(lz,V0,log10(dEps_dPg) ); hold on; clabel(cc)
 xs = axis;
-
-set(gca,'xscale','log'); 
+min(min(dEps_dPg))
+set(gca,'xscale','log');
 xlabel('$\lambda _{z}$'); ylabel('$V_{0}$');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
