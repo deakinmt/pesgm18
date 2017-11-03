@@ -1,4 +1,4 @@
-function [ Qgd,D_Eg,D_Et,e_L,eps_P ] = estm_DE_EL( Ps0,Ps_k,S0,Z,Vp,V0,n )
+function [ Qgd,D_Eg,D_Et,e_L,eps_P,DPg ] = estm_DE_EL( Ps0,Ps_k,S0,Z,Vp,V0,n )
 
 [ Pnp,Qnp,~ ] = pscc18_theorem_1( Vp, V0, Z );
 [ Snb,~,~ ] = calc_xpts( imag(S0),Qnp,Z,Vp,V0 );

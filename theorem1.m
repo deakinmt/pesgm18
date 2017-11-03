@@ -4,7 +4,8 @@
 clear all; close all; 
 fig_loc = 'C:\Users\chri3793\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
 
-cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb');addpath('pesgm_funcs');
+% cd('C:\Users\Matt\Documents\MATLAB\DPhil\pesgm18_mtlb');
+addpath('pesgm_funcs');
 
 set(0,'defaulttextinterpreter','latex');
 set(0,'defaultaxesfontsize',12);
@@ -62,42 +63,14 @@ xs = axis;
 lz_min = 0.09;
 % plot(lz_min*[1 1],xs(3:4),'k:','Linewidth',2);
 
-
-xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{t}$');
-colormap parula
-
-lgnd = legend('$k''$','Location','SouthWest');
-set(lgnd,'Interpreter','Latex','FontSize',16);
-
-export_fig(fig,fig_name);
-export_fig(fig,[fig_name,'.pdf'],'-dpdf');
-
-%% The minimum error: differential loss (analytic version)
-fig = figure('Color','White','Position',fig_nompos);
-fig_name = [fig_loc,'dPldPg_2013b'];
-
-Pnb = real(Snb);
-
-BX = (X.*(Vg.^2)).^2 - (aZ.^2).*( ...
-                    (aZ.*Pnb).^2 - 2*Pnb.*R.*(Vg.^2) + (Vg.^2).*(Vg.^2 - V0.^2)...
-                                                    );
-
-dQgdPg = ( (Pnb.*(aZ.^2)) - (R.*(Vg.^2)) )./sqrt(BX);
-dPldPg = ((2*R)./(abs(Z).^2)) .*(R + (X.*dQgdPg) );
-dPldPg  = dPldPg + 0./(imag(dPldPg)==0);
-
-[cc,hh] = contourf(lz,V0,100*dPldPg,100*(-0.15:0.05:0.7) ); hold on; 
-QQQQ = 100*[-0.05,0,0.05,(0.1:0.1:0.5)];
-clabel(cc,QQQQ); set(gca,'xscale','log'); 
-xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{0}$');
-xs = axis;
-V_min = 1.007;
-lz_max = 0.63;
+xlbl = xlabel('$R/X$');  ylbl = ylabel('\textit{V$_{t}$}');
+set(xlbl,'FontSize',14); set(ylbl,'FontSize',14);
 
 colormap parula
-% export_fig(fig,fig_name);
-% export_fig(fig,[fig_name,'.pdf'],'-dpdf');
 
+lgnd = legend('$k''$, \%','Location','SouthWest');
+set(lgnd,'Interpreter','Latex','FontSize',14,'Box','Off');
+% export_fig(fig,fig_name); %the PDF version doesn't work!
 %% Error limit
 fig = figure('Color','White','Position',fig_nompos);
 fig_name = [fig_loc,'k_bar'];
@@ -110,21 +83,13 @@ Kb  = Kb + 0./(imag(Kb)==0);
 
 cc = contourf(lz,V0,-real(100*Kb),100*(-0.2:0.05:1.15)); hold on; 
 set(gca,'xscale','log'); clabel(cc,'manual');
-xlabel('$\lambda _{z} = R/X$'); ylabel('$V_{t}$');
+xlbl = xlabel('$R/X$');  ylbl = ylabel('\textit{V$_{t}$}');
+set(xlbl,'FontSize',14); set(ylbl,'FontSize',14);
 
-V_min = 1.012;
-lz_max = 0.63;
-% plot(xs(1:2),V_min*[1 1],'k:','Linewidth',2);
-% plot(lz_max*[1 1],xs(3:4),'k:','Linewidth',2);
-
-lgnd = legend('$k_{nom}$','Location','SouthWest');
-set(lgnd,'Interpreter','Latex','FontSize',16);
-
+lgnd = legend('$k_{nom}\,$ , \%','Location','SouthWest');
+set(lgnd,'Interpreter','Latex','FontSize',14,'Box','Off');
 colormap parula
-export_fig(fig,fig_name);
-export_fig(fig,[fig_name,'.pdf'],'-dpdf');
-
-
+% export_fig(fig,fig_name);
 %% Numerically evaluate Theorem 1 condition
 dP = real(Snp - Snb);
 dlta = 3e-6;
@@ -153,3 +118,28 @@ min(min(dEps_dPg))
 set(gca,'xscale','log');
 xlabel('$\lambda _{z}$'); ylabel('$V_{0}$');
 
+% %% The minimum error: differential loss (analytic version)
+% fig = figure('Color','White','Position',fig_nompos);
+% fig_name = [fig_loc,'dPldPg_2013b'];
+% 
+% Pnb = real(Snb);
+% 
+% BX = (X.*(Vg.^2)).^2 - (aZ.^2).*( ...
+%                     (aZ.*Pnb).^2 - 2*Pnb.*R.*(Vg.^2) + (Vg.^2).*(Vg.^2 - V0.^2)...
+%                                                     );
+% 
+% dQgdPg = ( (Pnb.*(aZ.^2)) - (R.*(Vg.^2)) )./sqrt(BX);
+% dPldPg = ((2*R)./(abs(Z).^2)) .*(R + (X.*dQgdPg) );
+% dPldPg  = dPldPg + 0./(imag(dPldPg)==0);
+% 
+% [cc,hh] = contourf(lz,V0,100*dPldPg,100*(-0.15:0.05:0.7) ); hold on; 
+% QQQQ = 100*[-0.05,0,0.05,(0.1:0.1:0.5)];
+% clabel(cc,QQQQ); set(gca,'xscale','log'); 
+% xlabel('$R/X$'); ylabel('$V_{0}$');
+% xs = axis;
+% V_min = 1.007;
+% lz_max = 0.63;
+% 
+% colormap parula
+% % export_fig(fig,fig_name);
+% % export_fig(fig,[fig_name,'.pdf'],'-dpdf');
