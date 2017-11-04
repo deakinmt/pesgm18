@@ -6,9 +6,12 @@ addpath('pesgm_funcs');
 C = {1.0,1.0,1.0,[1.0 0.6 0.2]};
 VT = {1.04,1.08,1.12,1.05};
 
+nPg = 1000;
+nQg = 1200;
+
 % WARNING! takes ~15 minutes per run (4x).
-F.pg_ssc = linspace(-1e-6,0.2,1000);
-F.qg_ssc = linspace(-0.4,1e-6,1200);
+F.pg_ssc = linspace(-1e-6,0.2,nPg);
+F.qg_ssc = linspace(-0.4,1e-6,nQg);
 F.n = 120;
 % F.pg_ssc = linspace(-1e-6,0.2,100);
 % F.qg_ssc = linspace(-0.4,1e-6,100);
