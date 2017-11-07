@@ -14,3 +14,6 @@ https://sourceforge.net/projects/electricdss/
 
 GNU Octave is available at
 https://www.gnu.org/software/octave/
+
+The code is provided for the interested readers convenience and does not come with a warranty of any
+kind.
