@@ -9,7 +9,7 @@ VT = {1.04,1.08,1.12,1.05};
 nPg = 1000;
 nQg = 1200;
 
-% WARNING! takes ~15 minutes per run (4x).
+% NB takes 4x ~15 minutes per run
 F.pg_ssc = linspace(-1e-6,0.2,nPg);
 F.qg_ssc = linspace(-0.4,1e-6,nQg);
 F.n = 120;
@@ -19,7 +19,6 @@ F.n = 120;
 
 %-------------------------------------------------
 
-% remain the same:
 F.SRC = 'SOURCEBUS';
 F.filename = '\opendss_models\34Bus\ieee34Mod1_fxd';
 F.feeder = '34bus'; % for calc_ww and T_ratios

@@ -35,13 +35,10 @@ Pshade00 = zeros(size(Ps))./(Ps~=0);
 Pshade01 = min( [Ps;Pgb*ones(size(Ps))] ,[],1)./(Ps~=0);
 Pshade10 = (Pgb)*ones(size(Ps))./(Ps>Pgb);
 Pshade11 = min( [Ps;Pgd*ones(size(Ps))] ,[],1)./(Ps>Pgb);
-% Pshade10 = Pgd*ones(size(Ps))./(Ps>Pgd);
-% Pshade11 = Ps./(Ps>Pgd);
 
 fig_name = [fig_loc,'solar_curves'];
 fig = figure('Color','White','Position',fig_nompos);
 
-% p4 = plot(t+12,Ps,'Linewidth',2,'Color',[0.6 0.3 0.5]); hold on;
 p6=shadedplot(t+12,Pshade10,Pshade11,[0.8 0.8 0.98],'w'); hold on;
 p5=shadedplot(t+12,Pshade00,Pshade01,[0.8 0.98 0.8],'g'); hold on;
 xs = axis;
@@ -50,9 +47,6 @@ p0 = plot(xs(1:2),Pgp*[1 1],'k');
 p1 = plot(xs(1:2),Pgh*[1 1],'k--');
 p2 = plot(xs(1:2),Pgd*[1 1],'k-.');
 p3 = plot(xs(1:2),Pgb*[1 1],'k:');
-
-% arrow([3 Pgd],[3 Pgd-0.1]);
-% arrow([3 Pgd],[3 Pgd+0.1]);
 p4 = plot(t+12,Ps,'Linewidth',2,'Color',[0.6 0.3 0.5]); hold on;
 
 xlabel('$\tau $ (hour)');
