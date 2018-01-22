@@ -47,15 +47,16 @@ eps_L = 100*(DPn - DPt)./DPt;
 
 cc = contourf(lz,V0,eps_L,[0 10 (20:20:300)]); hold on; 
 set(gca,'xscale','log');
-clabel(cc)
-% clabel(cc,'manual'); % to make it prettier
+% clabel(cc)
+clabel(cc,'manual'); % to make it prettier
 
-xlbl = xlabel('$R/X$');  ylbl = ylabel('\textit{V$_{t}$}');
+xlbl = xlabel('Impedance Ratio, $R/X$');  
+ylbl = ylabel('Reference Voltage, \textit{V$_{t}$} (pu)');
 set(xlbl,'FontSize',14); set(ylbl,'FontSize',14);
 colormap parula
 
 lgnd = legend('$k''$, \%','Location','SouthWest');
-set(lgnd,'Interpreter','Latex','FontSize',14,'Box','Off');
+set(lgnd,'Interpreter','Latex','FontSize',14);
 % export_fig(fig,fig_name); % NB the PDF version doesn't work!
 %% Plot knom
 fig = figure('Color','White','Position',fig_nompos);
@@ -69,13 +70,15 @@ Kb  = Kb + 0./(imag(Kb)==0);
 
 cc = contourf(lz,V0,-real(100*Kb),100*(-0.2:0.05:1.15)); hold on; 
 set(gca,'xscale','log'); 
-clabel(cc);
-% clabel(cc,'manual');
-xlbl = xlabel('$R/X$');  ylbl = ylabel('\textit{V$_{t}$}');
+% clabel(cc);
+clabel(cc,'manual');
+xlbl = xlabel('Impedance Ratio, $R/X$');  
+ylbl = ylabel('Reference Voltage, \textit{V$_{t}$} (pu)');
 set(xlbl,'FontSize',14); set(ylbl,'FontSize',14);
 
 lgnd = legend('$k_{nom}\,$ , \%','Location','SouthWest');
-set(lgnd,'Interpreter','Latex','FontSize',14,'Box','Off');
+% set(lgnd,'Interpreter','Latex','FontSize',14,'Box','Off');
+set(lgnd,'Interpreter','Latex','FontSize',14);
 colormap parula
 % export_fig(fig,fig_name);
 
