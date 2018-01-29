@@ -3,7 +3,8 @@ fig_loc = 'C:\Users\chri3793\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
 addpath('pesgm_funcs');
 
 set(0,'defaulttextinterpreter','latex');
-set(0,'defaultaxesfontsize',12);
+set(0,'defaultaxesfontsize',14);
+set(0,'defaulttextfontsize',14);
 fig_nompos = [100 100 550 300];
 
 Vg = 1.06;
@@ -51,13 +52,13 @@ set(gca,'xscale','log');
 clabel(cc,'manual'); % to make it prettier
 
 xlbl = xlabel('Impedance Ratio, $R/X$');  
-ylbl = ylabel('Reference Voltage, \textit{V$_{t}$} (pu)');
+ylbl = ylabel('Reference Voltage, $V_{t}$ (pu)');
 set(xlbl,'FontSize',14); set(ylbl,'FontSize',14);
 colormap parula
 
 lgnd = legend('$k''$, \%','Location','SouthWest');
 set(lgnd,'Interpreter','Latex','FontSize',14);
-% export_fig(fig,fig_name); % NB the PDF version doesn't work!
+% export_fig(fig,fig_name,'-r300'); % NB the PDF version doesn't work!
 %% Plot knom
 fig = figure('Color','White','Position',fig_nompos);
 fig_name = [fig_loc,'k_bar'];
@@ -73,14 +74,14 @@ set(gca,'xscale','log');
 % clabel(cc);
 clabel(cc,'manual');
 xlbl = xlabel('Impedance Ratio, $R/X$');  
-ylbl = ylabel('Reference Voltage, \textit{V$_{t}$} (pu)');
+ylbl = ylabel('Reference Voltage, $V_{t}$ (pu)');
 set(xlbl,'FontSize',14); set(ylbl,'FontSize',14);
 
-lgnd = legend('$k_{nom}\,$ , \%','Location','SouthWest');
+lgnd = legend('$k_{nom}$, \%','Location','SouthWest');
 % set(lgnd,'Interpreter','Latex','FontSize',14,'Box','Off');
 set(lgnd,'Interpreter','Latex','FontSize',14);
 colormap parula
-% export_fig(fig,fig_name);
+% export_fig(fig,fig_name,'-r300');
 
 
 

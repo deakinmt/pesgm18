@@ -5,7 +5,7 @@ fig_loc = 'C:\Users\chri3793\Documents\DPhil\pesgm18\pesgm18_paper\figures\';
 
 set(0,'defaulttextinterpreter','latex');
 set(0,'defaultaxesfontsize',14);
-fig_nompos = [100 100 550 320];
+fig_nompos = [100 100 550 280];
 
 %% First create some solar data:
 
@@ -56,11 +56,16 @@ ylabel('Normalised Power, $P_{g} / \hat{P}_{g}$');
 %             '$\hat{P}_{g}$','$\tilde{P}_{g}(\tilde{Q}_{g})$','$P_{g}^{nom}$');
 % set(lgnd,'Interpreter','Latex','FontSize',14);
 
-lgnd = legend([p4,p5(2),p6(2),p2,p3],'$P_{S}(\tau)$','$E_{g}(0)$','$\Delta E_{g}(\tilde Q_{g})$',...
-            '$P_{g}^{nom}$','$\tilde{P}_{g}(\tilde{Q}_{g})$');
+% lgnd = legend([p4,p5(2),p6(2),p2,p3],'$P_{S}(\tau)$','$E_{g}(0)$','$\Delta E_{g}(\tilde Q_{g})$',...
+%             '$P_{g}^{nom}$','$\tilde{P}_{g}(\tilde{Q}_{g})$');
+lgnd = legend([p4,p5(2),p6(2)],'$P_{S}(\tau)$','$E_{g}(0)$','$\Delta E_{g}(\tilde Q_{g})$');
 set(lgnd,'Interpreter','Latex','FontSize',14);
 
-axis([0 24 0 1.38]);
+text(0.22,Pgb+0.08,'${P}_{g}$\textsuperscript{nom}','Interpreter','Latex');
+text(0.22,Pgd+0.08,'$\tilde{P}_{g}(\tilde{Q}_{n})$','Interpreter','Latex');
+
+
+axis([0 24 0 1.3]);
 
 xticks([0 6 12 18 24]);
 grid off;
